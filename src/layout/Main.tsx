@@ -55,10 +55,10 @@ const SidebarMenuIndicator = chakra(motion.div, {
     position: "absolute",
     h: 8,
     w: 1,
-    transform: "translateY(12px)",
-    rounded: "full",
     right: -0.5,
+    rounded: "full",
     bg: "purple.500",
+    transform: "translateY(12px)",
   },
 });
 
@@ -71,16 +71,16 @@ const SidebarNavItem = chakra(Link, {
   },
 });
 
-const navItem = {
+const nav: Variants = {
   initial: { maxWidth: 0 },
   animate: { maxWidth: 150, transition: { type: "tween" } },
   exit: { maxWidth: 0 },
 };
 
-const brand = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { type: "tween" } },
-  exit: { opacity: 0 },
+const brand: Variants = {
+  initial: { scale: 0.5, opacity: 0 },
+  animate: { scale: 1, opacity: 1, transition: { type: "tween" } },
+  exit: { scale: 0.5, opacity: 0 },
 };
 
 const sidebar: Variants = {
@@ -122,20 +122,25 @@ export const MainLayout: React.FC = ({ children }) => {
   return (
     <>
       <Sidebar variants={sidebar} animate={isSidebarOpen ? "show" : "hide"}>
-        <Box h="24">
-          {isSidebarOpen ? (
-            <Box as={motion.div} sx={styles.brand} initial={brand.initial} animate={brand.animate} exit={brand.exit}>
-              <Text fontFamily="brand" textTransform="uppercase" letterSpacing="widest" fontSize="xl">
-                Outstock
-              </Text>
-            </Box>
-          ) : (
-            <Box sx={styles.brand}>
-              <Text fontFamily="brand" textTransform="uppercase" letterSpacing="widest" fontSize="xl">
-                OS
-              </Text>
-            </Box>
-          )}
+        <Box h="24" position="relative">
+          <AnimatePresence>
+            {isSidebarOpen && (
+              <Box as={motion.div} sx={styles.brand} initial="initial" animate="animate" exit="exit" variants={brand}>
+                <Text fontFamily="brand" textTransform="uppercase" letterSpacing="widest" fontSize="xl">
+                  Outstock
+                </Text>
+              </Box>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {!isSidebarOpen && (
+              <Box as={motion.div} sx={styles.brand} initial="initial" animate="animate" exit="exit" variants={brand}>
+                <Text fontFamily="brand" textTransform="uppercase" letterSpacing="widest" fontSize="xl">
+                  OS
+                </Text>
+              </Box>
+            )}
+          </AnimatePresence>
         </Box>
         <VStack alignItems="stretch" position="relative" spacing="0" mt="4">
           <SidebarMenuIndicator initial={{ top: 0 }} animate={{ top: menuIndicatorIndex * 56 }} />
@@ -146,7 +151,7 @@ export const MainLayout: React.FC = ({ children }) => {
                 <Icon size={20} />
                 <AnimatePresence>
                   {isSidebarOpen && (
-                    <Box as={motion.div} sx={styles.item} initial={navItem.initial} animate={navItem.animate} exit={navItem.exit}>
+                    <Box as={motion.div} sx={styles.item} initial="initial" animate="animate" exit="exit" variants={nav}>
                       <Text ml="5" fontWeight="semibold">
                         {label}
                       </Text>
@@ -188,8 +193,12 @@ const styles = Styles.create({
     overflow: "hidden",
   },
   brand: {
-    height: 24,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     display: "flex",
+    position: "absolute",
     alignItems: "center",
     justifyContent: "center",
   },

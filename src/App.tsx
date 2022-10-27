@@ -1,8 +1,8 @@
 import { PrivateOutlet } from "components/Outlet";
 import { DashboardPage } from "pages/Home";
-import { LoginPage } from "pages/Login";
-import { PaymentPage } from "pages/Payments";
-import { ProductsPage } from "pages/Products";
+import { LoginPage } from "pages/Auth";
+import { PaymentPage } from "pages/Payment";
+import { ProductsPage } from "pages/Product";
 import { Route, Routes } from "react-router-dom";
 
 export default function App() {
